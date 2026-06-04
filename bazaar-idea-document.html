@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bazaar: Nearby Shops — Idea Document</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --primary: #FF5722;
+    --secondary: #1A237E;
+    --green: #10b981;
+    --bg: #f8f9ff;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .doc-header {
+    background: linear-gradient(135deg, var(--primary) 0%, #ff8a65 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .doc-header-inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+
+  .confidential-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .doc-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .doc-subtitle {
+    color: rgba(255,255,255,0.85);
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .meta-item {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    color: #fff;
+    font-size: 0.8rem;
+  }
+
+  .meta-item strong { display: block; font-size: 0.65rem; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+
+  /* CONTENT */
+  .container { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem; }
+
+  /* SECTION */
+  .section {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--bg);
+  }
+
+  .section-num {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-num.blue { background: var(--secondary); }
+  .section-num.green { background: var(--green); }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* TEXT */
+  p { color: var(--muted); margin-bottom: 0.75rem; }
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: var(--text); }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: #fff8f6;
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .highlight p { color: var(--text); font-weight: 500; margin: 0; }
+
+  .highlight-blue {
+    background: #f0f4ff;
+    border-left-color: var(--secondary);
+  }
+
+  .highlight-green {
+    background: #f0fdf8;
+    border-left-color: var(--green);
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+
+  .stat-box {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .stat-box .val { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+  .stat-box .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* LIST */
+  .feature-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+  .feature-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.75rem;
+    background: var(--bg);
+    border-radius: 8px;
+    font-size: 0.875rem;
+  }
+
+  .feature-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .fi-orange { background: #fff3ef; }
+  .fi-blue { background: #eff3ff; }
+  .fi-green { background: #f0fdf8; }
+  .fi-red { background: #fff5f5; }
+
+  .feature-item strong { display: block; color: var(--text); font-weight: 600; margin-bottom: 0.15rem; }
+  .feature-item span { color: var(--muted); font-size: 0.82rem; }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
+  th { background: var(--bg); padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); border-bottom: 2px solid var(--border); }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); }
+  tr:last-child td { border-bottom: none; }
+  td strong { color: var(--text); }
+
+  /* PHASE */
+  .phase-list { display: flex; flex-direction: column; gap: 0; }
+
+  .phase-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-item:last-child { border-bottom: none; }
+
+  .phase-label {
+    padding: 1rem;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .phase-label .phase-num {
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .phase-label .phase-time {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 0.2rem;
+  }
+
+  .phase-content { padding: 1rem; }
+  .phase-content h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+
+  .tag {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .tag-orange { background: #fff3ef; color: var(--primary); }
+  .tag-blue { background: #eff3ff; color: var(--secondary); }
+  .tag-green { background: #f0fdf8; color: var(--green); }
+
+  /* RISK */
+  .risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+
+  .risk-card {
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid;
+  }
+
+  .risk-high { border-color: #fecaca; background: #fff5f5; }
+  .risk-med { border-color: #fed7aa; background: #fffbf5; }
+
+  .risk-card .risk-level { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.4rem; }
+  .risk-high .risk-level { color: #ef4444; }
+  .risk-med .risk-level { color: #f97316; }
+  .risk-card h4 { font-size: 0.875rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+  .risk-card p { font-size: 0.78rem; color: var(--muted); margin: 0; }
+  .risk-card .mitigation { font-size: 0.75rem; color: var(--green); margin-top: 0.4rem; font-weight: 500; }
+
+  /* SIGNATURE */
+  .signature-box {
+    background: linear-gradient(135deg, var(--secondary) 0%, #283593 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    color: #fff;
+    margin-top: 1.5rem;
+  }
+
+  .signature-box h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; opacity: 0.9; }
+
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+  .sig-item label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.6; display: block; margin-bottom: 0.3rem; }
+  .sig-item .val { font-size: 0.9rem; font-weight: 600; }
+
+  .sig-line { border-top: 1px solid rgba(255,255,255,0.3); padding-top: 0.5rem; margin-top: 0.75rem; font-size: 0.75rem; opacity: 0.6; font-family: 'JetBrains Mono', monospace; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  @media(max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .phase-item { grid-template-columns: 1fr; }
+    .phase-label { border-right: none; border-bottom: 1px solid var(--border); }
+    .sig-grid { grid-template-columns: 1fr; }
+    .section { padding: 1.25rem; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .section { box-shadow: none; border: 1px solid #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-header-inner">
+    <div class="confidential-badge">🔒 Confidential — Original Idea Document</div>
+    <h1 class="doc-title">Bazaar: Nearby Shops</h1>
+    <p class="doc-subtitle">Hyperlocal Shop Discovery, Price Comparison & Direct Ordering Platform</p>
+    <div class="meta-row">
+      <div class="meta-item"><strong>Founder</strong>Sachin Kumar Tiwari</div>
+      <div class="meta-item"><strong>Document Date</strong>June 4, 2026</div>
+      <div class="meta-item"><strong>Version</strong>v1.0 — Original</div>
+      <div class="meta-item"><strong>Status</strong>Active Development</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- 1. PROBLEM STATEMENT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <h2 class="section-title">Problem Statement</h2>
+    </div>
+
+    <div class="highlight">
+      <p>"Customers waste time visiting shops only to find items are out of stock or prices are higher than expected. Local shopkeepers lose customers to online platforms despite having the same products."</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:1.25rem;">
+      <div class="stat-box"><div class="val">3–4x</div><div class="lbl">Wasted trips to shops daily</div></div>
+      <div class="stat-box"><div class="val">63%</div><div class="lbl">Prefer local shops if convenient</div></div>
+      <div class="stat-box"><div class="val">₹2L Cr</div><div class="lbl">Quick commerce market by 2028</div></div>
+    </div>
+
+    <p style="margin-top:1.25rem;"><strong>Core pain points identified:</strong></p>
+    <ul class="feature-list" style="margin-top:0.75rem;">
+      <li class="feature-item"><div class="feature-icon fi-red">❌</div><div><strong>No price visibility</strong><span>Customers don't know prices before visiting — wasted trips</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-red">❌</div><div><strong>No stock visibility</strong><span>No way to know if an item is available without physically going</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-red">❌</div><div><strong>No comparison tool</strong><span>Can't compare prices across nearby shops easily</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-red">❌</div><div><strong>Shopkeeper losing customers</strong><span>Local shops losing business to Amazon/Flipkart despite proximity</span></div></li>
+    </ul>
+  </div>
+
+  <!-- 2. SOLUTION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <h2 class="section-title">The Solution</h2>
+    </div>
+
+    <div class="highlight highlight-blue">
+      <p>"A map-based mobile app where nearby shops are tagged with their live price lists, stock status, and customers can place pickup orders directly."</p>
+    </div>
+
+    <p style="margin-top:1rem;"><strong>How it works — 3 steps:</strong></p>
+
+    <div class="grid-3" style="margin-top:0.75rem;">
+      <div class="stat-box">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">🗺️</div>
+        <div class="val" style="font-size:1rem;">Discover</div>
+        <div class="lbl">Find nearby shops on map with category filters</div>
+      </div>
+      <div class="stat-box">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">📋</div>
+        <div class="val" style="font-size:1rem;">Compare</div>
+        <div class="lbl">View live price lists and compare across shops</div>
+      </div>
+      <div class="stat-box">
+        <div style="font-size:1.5rem;margin-bottom:0.5rem;">📦</div>
+        <div class="val" style="font-size:1rem;">Reserve</div>
+        <div class="lbl">Place pickup order — shop confirms, customer collects</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. UNIQUE VALUE PROPOSITION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num blue">03</div>
+      <h2 class="section-title">Unique Value Proposition</h2>
+    </div>
+
+    <div class="highlight highlight-green">
+      <p>"Bazaar is not a delivery app — it's a discovery + reservation platform for your actual local neighbourhood shops. No dark stores, no strangers — your familiar dukaan, digitized."</p>
+    </div>
+
+    <p style="margin-top:1rem;"><strong>Key differentiators:</strong></p>
+    <ul class="feature-list" style="margin-top:0.75rem;">
+      <li class="feature-item"><div class="feature-icon fi-green">✅</div><div><strong>Real local shops — not dark stores</strong><span>Blinkit/Zepto use warehouses. Bazaar uses actual neighbourhood shops customers already trust.</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-green">✅</div><div><strong>QR Code viral loop</strong><span>Shopkeepers share QR code with existing customers — organic, zero cost growth.</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-green">✅</div><div><strong>Price comparison</strong><span>See same item's price across multiple nearby shops — unique in local commerce.</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-green">✅</div><div><strong>Pickup-first model</strong><span>No delivery logistics — zero operational cost, instant scalability.</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-green">✅</div><div><strong>Tier-2/3 city focus</strong><span>Where Blinkit doesn't exist — 56% of India's e-commerce users are here.</span></div></li>
+    </ul>
+  </div>
+
+  <!-- 4. TARGET AUDIENCE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <h2 class="section-title">Target Audience</h2>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <p style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--primary);font-weight:700;margin-bottom:0.75rem;">🛒 Customers</p>
+        <ul class="feature-list">
+          <li class="feature-item"><div class="feature-icon fi-orange">👤</div><div><strong>Urban & semi-urban residents</strong><span>Age 18–45, smartphone users</span></div></li>
+          <li class="feature-item"><div class="feature-icon fi-orange">📍</div><div><strong>Tier-2/3 city residents</strong><span>Where quick commerce doesn't operate</span></div></li>
+          <li class="feature-item"><div class="feature-icon fi-orange">🏠</div><div><strong>Daily household shoppers</strong><span>Grocery, medical, vegetables — daily needs</span></div></li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--secondary);font-weight:700;margin-bottom:0.75rem;">🏪 Shopkeepers</p>
+        <ul class="feature-list">
+          <li class="feature-item"><div class="feature-icon fi-blue">🥛</div><div><strong>Kirana / General stores</strong><span>Daily essentials — highest frequency</span></div></li>
+          <li class="feature-item"><div class="feature-icon fi-blue">💊</div><div><strong>Medical stores</strong><span>High trust, regular customers</span></div></li>
+          <li class="feature-item"><div class="feature-icon fi-blue">📱</div><div><strong>Electronics / Clothing</strong><span>Price comparison driven purchases</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. FEATURES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num blue">05</div>
+      <h2 class="section-title">Core Features</h2>
+    </div>
+
+    <p style="margin-bottom:1rem;"><strong>Customer Interface:</strong></p>
+    <ul class="feature-list">
+      <li class="feature-item"><div class="feature-icon fi-orange">🗺️</div><div><strong>Map Discovery</strong><span>Nearby shops on map with colored category pins</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-orange">📋</div><div><strong>Live Price List</strong><span>Real-time product catalog with stock status</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-orange">🔍</div><div><strong>Price Comparison</strong><span>Compare same item across multiple nearby shops</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-orange">🛒</div><div><strong>Pickup Order</strong><span>Reserve items — shop confirms — customer collects</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-orange">❤️</div><div><strong>Favourites + Deals</strong><span>Save shops, get notified about special offers</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-orange">📱</div><div><strong>QR Code Entry</strong><span>Scan shop's QR → directly open shop profile</span></div></li>
+    </ul>
+
+    <p style="margin-top:1.25rem;margin-bottom:1rem;"><strong>Shopkeeper Interface:</strong></p>
+    <ul class="feature-list">
+      <li class="feature-item"><div class="feature-icon fi-blue">📊</div><div><strong>Dashboard</strong><span>Today's sales, pending orders, product count</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-blue">📦</div><div><strong>Order Management</strong><span>Accept/reject orders with one tap</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-blue">➕</div><div><strong>Product Catalog</strong><span>Add products, update prices, toggle stock status</span></div></li>
+      <li class="feature-item"><div class="feature-icon fi-blue">📱</div><div><strong>QR Code Generator</strong><span>Share shop QR with existing customers for instant onboarding</span></div></li>
+    </ul>
+  </div>
+
+  <!-- 6. BUSINESS MODEL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num green">06</div>
+      <h2 class="section-title">Business Model & Monetization</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Revenue Stream</th>
+          <th>Model</th>
+          <th>Phase</th>
+          <th>Potential</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Commission per order</strong></td><td>5–8% per successful order</td><td>Phase 2</td><td>Primary</td></tr>
+        <tr><td><strong>Featured listing</strong></td><td>Shops pay for prominent placement</td><td>Phase 2</td><td>Primary</td></tr>
+        <tr><td><strong>SaaS subscription</strong></td><td>₹299–999/month seller tools</td><td>Phase 3</td><td>Secondary</td></tr>
+        <tr><td><strong>Deals & Offers promotion</strong></td><td>Shops pay to promote deals</td><td>Phase 3</td><td>Secondary</td></tr>
+        <tr><td><strong>ONDC integration</strong></td><td>Government network — wider reach</td><td>Phase 4</td><td>Strategic</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight highlight-green" style="margin-top:1.25rem;">
+      <p>Phase 1 is <strong>100% free for shopkeepers</strong> — goal is adoption, not revenue. Revenue starts Phase 2 after 100+ active shops.</p>
+    </div>
+  </div>
+
+  <!-- 7. COMPETITIVE LANDSCAPE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <h2 class="section-title">Competitive Landscape</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Competitor</th>
+          <th>Model</th>
+          <th>Gap Bazaar Fills</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Blinkit / Zepto</strong></td><td>Dark store delivery, 10-min</td><td>Not in Tier-2/3 · Uses warehouses not real shops</td></tr>
+        <tr><td><strong>Swiggy Instamart</strong></td><td>Dark store, metro cities only</td><td>No local shopkeeper support</td></tr>
+        <tr><td><strong>JioMart</strong></td><td>Kirana delivery partner</td><td>Complex onboarding · Delivery required</td></tr>
+        <tr><td><strong>Google Maps</strong></td><td>Shop discovery only</td><td>No price list · No ordering · No stock status</td></tr>
+        <tr><td><strong>Justdial</strong></td><td>Business directory</td><td>No real-time prices · No ordering</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight" style="margin-top:1.25rem;">
+      <p><strong>Bazaar's moat:</strong> The only platform focused on real neighbourhood shops with live price lists + pickup ordering in Tier-2/3 India.</p>
+    </div>
+  </div>
+
+  <!-- 8. ROADMAP -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num blue">08</div>
+      <h2 class="section-title">Execution Roadmap</h2>
+    </div>
+
+    <div class="phase-list">
+      <div class="phase-item">
+        <div class="phase-label">
+          <span class="phase-num">Phase 01</span>
+          <span class="phase-time">Month 1–2</span>
+        </div>
+        <div class="phase-content">
+          <h4>MVP + First 10 Shops</h4>
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Manual onboarding — founder goes door to door. Free for all shops.</p>
+          <div class="tag-row">
+            <span class="tag tag-orange">App MVP</span>
+            <span class="tag tag-orange">10 shops</span>
+            <span class="tag tag-orange">1 city</span>
+            <span class="tag tag-orange">User feedback</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-label">
+          <span class="phase-num">Phase 02</span>
+          <span class="phase-time">Month 3–4</span>
+        </div>
+        <div class="phase-content">
+          <h4>City Pilot + Firebase</h4>
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Real data, real users. QR code viral loop activated.</p>
+          <div class="tag-row">
+            <span class="tag tag-blue">Firebase connect</span>
+            <span class="tag tag-blue">50 shops</span>
+            <span class="tag tag-blue">QR onboarding</span>
+            <span class="tag tag-blue">Google Maps</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-label">
+          <span class="phase-num">Phase 03</span>
+          <span class="phase-time">Month 5–6</span>
+        </div>
+        <div class="phase-content">
+          <h4>Monetization + Scale</h4>
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Commission model live. 3–5 cities. Partnership talks begin.</p>
+          <div class="tag-row">
+            <span class="tag tag-green">Commission 5%</span>
+            <span class="tag tag-green">Featured listings</span>
+            <span class="tag tag-green">3–5 cities</span>
+            <span class="tag tag-green">Play Store</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-item">
+        <div class="phase-label">
+          <span class="phase-num">Phase 04</span>
+          <span class="phase-time">Month 7+</span>
+        </div>
+        <div class="phase-content">
+          <h4>Growth + ONDC</h4>
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">ONDC integration. Partnership with telecom/payment companies.</p>
+          <div class="tag-row">
+            <span class="tag tag-orange">ONDC</span>
+            <span class="tag tag-orange">Jio/Airtel partnership</span>
+            <span class="tag tag-orange">Pan-India</span>
+            <span class="tag tag-orange">Investor ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. RISKS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <h2 class="section-title">Key Risks & Mitigations</h2>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-card risk-high">
+        <div class="risk-level">🔴 High Risk</div>
+        <h4>Chicken-Egg Problem</h4>
+        <p>No customers without shops, no shops without customers</p>
+        <div class="mitigation">→ Start with shopkeeper side. 10 shops first, then invite customers.</div>
+      </div>
+      <div class="risk-card risk-high">
+        <div class="risk-level">🔴 High Risk</div>
+        <h4>Stale Price Data</h4>
+        <p>Shopkeeper forgets to update — customer gets wrong price</p>
+        <div class="mitigation">→ WhatsApp bot for quick updates. Penalty for wrong prices.</div>
+      </div>
+      <div class="risk-card risk-high">
+        <div class="risk-level">🔴 High Risk</div>
+        <h4>Shopkeeper Resistance</h4>
+        <p>Tech-averse, busy, "kaam chal raha hai" mindset</p>
+        <div class="mitigation">→ Founder manually sets up first 10. Show immediate value.</div>
+      </div>
+      <div class="risk-card risk-med">
+        <div class="risk-level">🟡 Medium Risk</div>
+        <h4>Big Player Entry</h4>
+        <p>Blinkit/Zepto expanding to Tier-2 cities</p>
+        <div class="mitigation">→ Real shop relationships = moat they can't replicate fast.</div>
+      </div>
+      <div class="risk-card risk-med">
+        <div class="risk-level">🟡 Medium Risk</div>
+        <h4>Idea Theft</h4>
+        <p>Partner/investor steals concept without compensation</p>
+        <div class="mitigation">→ NDA before any partnership. Trademark app name. This document.</div>
+      </div>
+      <div class="risk-card risk-med">
+        <div class="risk-level">🟡 Medium Risk</div>
+        <h4>Solo Execution</h4>
+        <p>One founder = slow speed, single point of failure</p>
+        <div class="mitigation">→ Find co-founder. Split tech + sales roles.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. TECH STACK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num green">10</div>
+      <h2 class="section-title">Technology Stack</h2>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Layer</th><th>Technology</th><th>Reason</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Mobile App</strong></td><td>React Native + Expo</td><td>iOS + Android from one codebase</td></tr>
+        <tr><td><strong>Database</strong></td><td>Firebase Firestore</td><td>Real-time sync, no server management</td></tr>
+        <tr><td><strong>Authentication</strong></td><td>Firebase Auth (OTP)</td><td>Phone-based login, India friendly</td></tr>
+        <tr><td><strong>Maps</strong></td><td>Google Maps SDK</td><td>Best India coverage</td></tr>
+        <tr><td><strong>Payments</strong></td><td>Razorpay</td><td>UPI + COD, India's best gateway</td></tr>
+        <tr><td><strong>Hosting</strong></td><td>Firebase + Expo EAS</td><td>Zero DevOps, auto-scaling</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SIGNATURE / PROOF OF OWNERSHIP -->
+  <div class="signature-box">
+    <h3>📄 Proof of Original Concept — Ownership Declaration</h3>
+    <div class="sig-grid">
+      <div class="sig-item">
+        <label>Founder / Original Creator</label>
+        <div class="val">Sachin Kumar Tiwari</div>
+        <div class="sig-line">sachintiwari-here</div>
+      </div>
+      <div class="sig-item">
+        <label>App Name (Trademark Pending)</label>
+        <div class="val">Bazaar: Nearby Shops</div>
+        <div class="sig-line">bazaar--nearby-shops</div>
+      </div>
+      <div class="sig-item">
+        <label>Document Created</label>
+        <div class="val">June 4, 2026</div>
+        <div class="sig-line">v1.0 — Original</div>
+      </div>
+      <div class="sig-item">
+        <label>GitHub Repository</label>
+        <div class="val">sachintiwari-here/Bazaar-icons</div>
+        <div class="sig-line">Timestamped commits as proof</div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.2);font-size:0.8rem;opacity:0.75;font-family:'JetBrains Mono',monospace;">
+      This document serves as proof of original concept creation. Any unauthorized use of this concept, name, or business model without explicit written permission from Sachin Kumar Tiwari constitutes intellectual property theft.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Bazaar: Nearby Shops · Confidential Idea Document · Sachin Kumar Tiwari · June 4, 2026
+</footer>
+
+</body>
+</html>
